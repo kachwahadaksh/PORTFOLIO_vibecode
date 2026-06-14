@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <style>
+        :root {
+            --background: #080b16;
+            --surface: rgba(15, 23, 42, 0.86);
+            --surface-soft: rgba(15, 23, 42, 0.72);
+            --text: #e7eefc;
+            --primary: #7dd3fc;
+            --accent: #6ee7b7;
+            --muted: #9ca3af;
+            --border: rgba(148, 163, 184, 0.18);
+            --shadow: 0 28px 80px rgba(0, 0, 0, 0.18);
+        }
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top left, rgba(125, 211, 252, 0.14), transparent 24%),
+                        radial-gradient(circle at bottom right, rgba(110, 231, 183, 0.12), transparent 18%),
+                        linear-gradient(180deg, #0a0f1c 0%, #0f172a 100%);
+            color: var(--text);
+            line-height: 1.7;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 18% 14%, rgba(125, 211, 252, 0.16), transparent 12%),
+                        radial-gradient(circle at 84% 82%, rgba(110, 231, 183, 0.12), transparent 17%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        .container {
+            width: min(1140px, calc(100% - 2rem));
+            margin: 0 auto;
+            padding: 2rem 0 5rem;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1rem 0;
+            backdrop-filter: blur(18px);
+        }
+        .brand {
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--primary);
+        }
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 1.4rem;
+            flex-wrap: wrap;
+        }
+        a.nav-link {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+        a.nav-link:hover {
+            color: var(--text);
+            transform: translateY(-1px);
+        }
+        .hero {
+            display: grid;
+            grid-template-columns: 1.2fr 0.9fr;
+            gap: 2.5rem;
+            align-items: center;
+            padding: 4rem 0 3rem;
+        }
+        .hero-copy h1 {
+            margin: 0;
+            font-size: clamp(2.8rem, 6vw, 4.8rem);
+            letter-spacing: -0.05em;
+            line-height: 1.02;
+        }
+        .hero-copy p {
+            max-width: 42rem;
+            color: var(--muted);
+            margin: 1.5rem 0 2rem;
+            font-size: 1.05rem;
+        }
+        .hero-copy small {
+            display: block;
+            color: var(--primary);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 1.85rem;
+            gap: 0.5rem;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(125, 211, 252, 1), rgba(56, 189, 248, 0.92));
+            color: #0b1221;
+            box-shadow: 0 24px 55px rgba(56, 189, 248, 0.2);
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.08);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .hero-image {
+            position: relative;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 2rem;
+            min-height: 420px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        .hero-image::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(175deg, transparent 0%, rgba(15,23,42,0.55) 80%);
+            pointer-events: none;
+        }
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: saturate(1.05);
+        }
+        .hero-image img + .hero-overlay {
+            display: none;
+        }
+        .project-thumb {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 1.25rem;
+            display: block;
+        }
+        section {
+            padding: 3rem 0;
+        }
+        .section-title {
+            margin: 0 0 1.5rem;
+            font-size: 1.45rem;
+            letter-spacing: 0.02em;
+            color: var(--text);
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 1.7rem;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+            backdrop-filter: blur(10px);
+        }
+        .stat-card h3 {
+            margin: 0 0 0.6rem;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        .stat-card p {
+            margin: 0;
+            color: var(--muted);
+        }
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.75rem;
+        }
+        .card {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border);
+            border-radius: 2rem;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+        }
+        .card h3 {
+            margin: 0 0 0.85rem;
+            font-size: 1.35rem;
+        }
+        .card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 1rem;
+        }
+        .project-item {
+            display: grid;
+            gap: 1rem;
+        }
+        .project-item span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+        .project-item h3 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+        .project-item p {
+            color: var(--muted);
+            margin: 0;
+        }
+        .project-item a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+        .project-item a:hover {
+            color: var(--primary);
+        }
+        .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.06);
+            color: var(--text);
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.08);
+            font-size: 0.95rem;
+            transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+        }
+        .social-link:hover {
+            transform: translateY(-1px);
+            border-color: var(--primary);
+            background: rgba(125, 211, 252, 0.12);
+        }
+        .contact-form {
+            display: grid;
+            gap: 1rem;
+        }
+        .field-group {
+            display: grid;
+            gap: 0.5rem;
+        }
+        .field-group label {
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+        .field-group input,
+        .field-group textarea {
+            width: 100%;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 1rem;
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            padding: 0.95rem 1rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .field-group input:focus,
+        .field-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(125, 211, 252, 0.12);
+        }
+        .field-group textarea {
+            min-height: 170px;
+            resize: vertical;
+        }
+        .btn-submit {
+            width: fit-content;
+            padding: 1rem 1.85rem;
+        }
+        footer {
+            text-align: center;
+            border-top: 1px solid var(--border);
+            padding-top: 2rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+        @media (max-width: 880px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-image {
+                min-height: 320px;
+            }
+        }
+
+        /* interactive and reveal styles */
+        .project-item {
+            cursor: pointer;
+            transition: transform 0.28s ease, box-shadow 0.28s ease;
+        }
+        .project-item:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 20px 50px rgba(2,6,23,0.5);
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            will-change: opacity, transform;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* modal */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(2,6,23,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 60;
+            padding: 1.5rem;
+        }
+        .modal-backdrop.open {
+            display: flex;
+        }
+        .modal {
+            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: 0 40px 120px rgba(2,6,23,0.6);
+            display: grid;
+            grid-template-columns: 1fr 420px;
+        }
+        .modal-left {
+            min-height: 320px;
+        }
+        .modal-left img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .modal-right {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+        .modal-close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="brand">DAKSH</div>
+            <nav>
+                <a class="nav-link" href="#about">About</a>
+                <a class="nav-link" href="#projects">Projects</a>
+                <a class="nav-link" href="#skills">Skills</a>
+                <a class="nav-link" href="#contact">Contact</a>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <div class="hero-copy">
+                <small>Full-stack developer & designer</small>
+                <h1>Hi, I'm DAKSH. I make thoughtful, polished web experiences.</h1>
+                <p>I bring clarity to projects with clean code, elegant layouts, and a user-first approach. I love translating ideas into websites that feel calm, reliable, and memorable.</p>
+                <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+                    <a class="btn btn-primary" href="#projects">View projects</a>
+                    <a class="btn btn-secondary" href="#contact">Say hello</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1600&q=80" alt="Coding workspace">
+            </div>
+        </section>
+
+        <section id="about">
+            <h2 class="section-title">About Me</h2>
+            <div class="content-grid">
+                <div class="card">
+                    <h3>Who I am</h3>
+                    <p>I'm a developer who values clarity and craftsmanship. I build websites that feel personal, polished, and easy to use—whether for a small brand or a growing team.</p>
+                </div>
+                <div class="card">
+                    <h3>How I work</h3>
+                    <p>I focus on thoughtful structure, smooth interactions, and consistent design. I enjoy turning early ideas into clear, practical web experiences with a calm aesthetic.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <h2 class="section-title">Skills</h2>
+            <div class="stats">
+                <div class="stat-card">
+                    <h3>HTML</h3>
+                    <p>Semantic markup, accessible structure, clean content flow.</p>
+                </div>
+                <div class="stat-card">
+                    <h3>CSS</h3>
+                    <p>Responsive layouts, animations, component styling, design systems.</p>
+                </div>
+                <div class="stat-card">
+                    <h3>JavaScript</h3>
+                    <p>Interactive UI, client-side logic, API integration, modern frameworks.</p>
+                </div>
+                <div class="stat-card">
+                    <h3>UI/UX</h3>
+                    <p>Visual design, user flows, accessibility, strong attention to detail.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="content-grid">
+                <div class="project-item card" tabindex="0" data-title="Portfolio Website" data-desc="A personal website showcasing portfolio work, experience, and contact details." data-img="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1400&q=80">
+                    <img class="project-thumb" src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=60" alt="Portfolio project 1">
+                    <span>Project 1</span>
+                    <h3>Portfolio Website</h3>
+                    <p>A personal website showcasing portfolio work, experience, and contact details.</p>
+                    <button class="btn open-project" type="button">Preview</button>
+                </div>
+                <div class="project-item card" tabindex="0" data-title="Web App Dashboard" data-desc="A dashboard interface for managing data, analytics, and user interactions." data-img="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1400&q=80">
+                    <img class="project-thumb" src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=60" alt="Portfolio project 2">
+                    <span>Project 2</span>
+                    <h3>Web App Dashboard</h3>
+                    <p>A dashboard interface for managing data, analytics, and user interactions.</p>
+                    <button class="btn open-project" type="button">Preview</button>
+                </div>
+                <div class="project-item card" tabindex="0" data-title="E‑commerce Landing" data-desc="A modern landing page designed to convert visitors into customers." data-img="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80">
+                    <img class="project-thumb" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=60" alt="Portfolio project 3">
+                    <span>Project 3</span>
+                    <h3>E-commerce Landing</h3>
+                    <p>A modern landing page designed to convert visitors into customers.</p>
+                    <button class="btn open-project" type="button">Preview</button>
+                </div>
+                <div class="project-item card" tabindex="0" data-title="Design System" data-desc="Reusable components and visual guidelines for consistent product interfaces." data-img="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1400&q=80">
+                    <img class="project-thumb" src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=800&q=60" alt="Portfolio project 4">
+                    <span>Project 4</span>
+                    <h3>Design System</h3>
+                    <p>Reusable components and visual guidelines for consistent product interfaces.</p>
+                    <button class="btn open-project" type="button">Preview</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2 class="section-title">Contact</h2>
+            <div class="content-grid">
+                <div class="card">
+                    <h3>Let's build something together</h3>
+                    <p>If you'd like to talk about a project, collaboration, or freelance work, send a message to:</p>
+                    <p style="margin:0.75rem 0 0; color: var(--text); font-weight:600;">kachwahadaksh@gmail.com</p>
+                    <div class="social-links">
+                        <a class="social-link" href="https://www.linkedin.com/in/daksh-kachwaha" target="_blank" rel="noopener" aria-label="LinkedIn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="margin-right:8px;">
+                                <path d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM0 8h5v16H0zM7 8h4.8v2.2h.1c.7-1.3 2.4-2.2 3.9-2.2 4.2 0 5 2.8 5 6.4V24H17v-7.2c0-1.7 0-3.9-2.4-3.9S12 15 12 16.9V24H7z" fill="currentColor"/>
+                            </svg>
+                            LinkedIn
+                        </a>
+                        <a class="social-link" href="https://github.com/kachwahadaksh" target="_blank" rel="noopener" aria-label="GitHub">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="margin-right:8px;">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 .5C5.73.5.86 5.37.86 11.64c0 4.76 3.08 8.8 7.36 10.23.54.1.74-.24.74-.52 0-.26-.01-1-.02-1.96-2.99.65-3.62-1.44-3.62-1.44-.49-1.25-1.2-1.58-1.2-1.58-.98-.67.07-.66.07-.66 1.08.08 1.65 1.11 1.65 1.11.96 1.66 2.52 1.18 3.14.9.1-.7.38-1.18.69-1.45-2.39-.27-4.9-1.2-4.9-5.35 0-1.18.42-2.15 1.11-2.91-.11-.28-.48-1.4.11-2.92 0 0 .9-.29 2.95 1.11a10.2 10.2 0 012.69-.36c.91 0 1.83.12 2.69.36 2.05-1.4 2.95-1.11 2.95-1.11.6 1.52.23 2.64.12 2.92.69.76 1.11 1.73 1.11 2.91 0 4.16-2.52 5.07-4.92 5.34.39.34.73 1.01.73 2.03 0 1.47-.01 2.66-.01 3.02 0 .29.19.63.75.52 4.28-1.44 7.36-5.48 7.36-10.24C23.14 5.37 18.27.5 12 .5z" fill="currentColor"/>
+                            </svg>
+                            GitHub
+                        </a>
+                        <a class="social-link" href="https://instagram.com/kachwahadaksh" target="_blank" rel="noopener" aria-label="Instagram">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="margin-right:8px;">
+                                <path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm5 5.6a4.4 4.4 0 100 8.8 4.4 4.4 0 000-8.8zm6.5-.9a1.1 1.1 0 11-2.2 0 1.1 1.1 0 012.2 0z" fill="currentColor"/>
+                            </svg>
+                            Instagram
+                        </a>
+                    </div>
+                </div>
+                <form id="contact-form" class="card contact-form" method="post">
+                    <div class="field-group">
+                        <label for="name">Name</label>
+                        <input id="name" name="name" type="text" placeholder="Your name" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email" placeholder="Your email" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" placeholder="Tell me about your project" required></textarea>
+                    </div>
+                    <button class="btn btn-primary btn-submit" type="submit">Send message</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- project preview modal -->
+        <div id="project-modal-backdrop" class="modal-backdrop" aria-hidden="true">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+                <button class="modal-close" aria-label="Close">×</button>
+                <div class="modal-left">
+                    <img id="modal-img" src="" alt="Project preview">
+                </div>
+                <div class="modal-right">
+                    <h3 id="modal-title">Project title</h3>
+                    <p id="modal-desc">Project description</p>
+                    <div style="margin-top:1rem;"><a id="modal-link" class="btn btn-primary" href="#" target="_blank" rel="noopener">Open live</a></div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2026 DAKSH. Crafted with HTML & CSS.</p>
+        </footer>
+
+        <script>
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a.nav-link').forEach(a => {
+                a.addEventListener('click', e => {
+                    e.preventDefault();
+                    const target = document.querySelector(a.getAttribute('href'));
+                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+
+            // Reveal on scroll
+            const reveals = document.querySelectorAll('section, .card, .project-item');
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        e.target.classList.add('visible');
+                        io.unobserve(e.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+            reveals.forEach(r => io.observe(r));
+
+            // Project modal
+            const backdrop = document.getElementById('project-modal-backdrop');
+            const modalImg = document.getElementById('modal-img');
+            const modalTitle = document.getElementById('modal-title');
+            const modalDesc = document.getElementById('modal-desc');
+            const modalLink = document.getElementById('modal-link');
+            const closeBtn = document.querySelector('.modal-close');
+
+            function openModal(title, desc, img) {
+                modalTitle.textContent = title;
+                modalDesc.textContent = desc;
+                modalImg.src = img;
+                modalLink.href = img; // placeholder: link to the image or project
+                backdrop.classList.add('open');
+                backdrop.setAttribute('aria-hidden', 'false');
+            }
+            function closeModal() {
+                backdrop.classList.remove('open');
+                backdrop.setAttribute('aria-hidden', 'true');
+                modalImg.src = '';
+            }
+
+            document.querySelectorAll('.open-project').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const card = e.target.closest('.project-item');
+                    if (!card) return;
+                    openModal(card.dataset.title, card.dataset.desc, card.dataset.img);
+                });
+            });
+
+            closeBtn.addEventListener('click', closeModal);
+            backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closeModal(); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+            
+            // Contact form submission via fetch to backend
+            const contactForm = document.getElementById('contact-form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(contactForm);
+                    const payload = {
+                        name: formData.get('name'),
+                        email: formData.get('email'),
+                        message: formData.get('message')
+                    };
+                    try {
+                        const res = await fetch('/api/contact', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (res.ok) {
+                            alert('Thanks — your message was sent.');
+                            contactForm.reset();
+                        } else {
+                            const json = await res.json();
+                            alert('Error: ' + (json.error || res.statusText));
+                        }
+                    } catch (err) {
+                        alert('Network error — could not send message.');
+                        console.error(err);
+                    }
+                });
+            }
+        </script>
+    </div>
+</body>
+</html>

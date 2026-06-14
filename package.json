@@ -1,0 +1,9 @@
+{
+  "name": "daksh-portfolio",
+  "version": "1.0.0",
+  "description": "Daksh's portfolio with Vercel serverless contact API",
+  "private": true,
+  "dependencies": {
+    "@sendgrid/mail": "^7.7.0"
+  }
+}
